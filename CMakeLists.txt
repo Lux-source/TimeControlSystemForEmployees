@@ -6,4 +6,5 @@ set(CMAKE_C_STANDARD 11)
 include_directories(.)
 
 add_executable(TimeControlSystemForEmployees
-        main.c)
+        main.c
+        library.h)

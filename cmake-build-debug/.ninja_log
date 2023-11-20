@@ -1,3 +1,13 @@
 # ninja log v5
 0	57	7221991829792428	CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj	f699a0a83d1e2344
 57	144	7221991830649556	TimeControlSystemForEmployees.exe	950cd0ddd9a91e89
+3	104	7222118229541066	CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj	f699a0a83d1e2344
+104	296	7222118231447499	TimeControlSystemForEmployees.exe	950cd0ddd9a91e89
+2	64	7222127142288215	CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj	f699a0a83d1e2344
+64	128	7222127142912774	TimeControlSystemForEmployees.exe	950cd0ddd9a91e89
+2	65	7222127514803651	CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj	f699a0a83d1e2344
+65	122	7222127515345526	TimeControlSystemForEmployees.exe	950cd0ddd9a91e89
+1	58	7222127992436036	CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj	f699a0a83d1e2344
+58	117	7222127992993474	TimeControlSystemForEmployees.exe	950cd0ddd9a91e89
+1	61	7222128536288832	CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj	f699a0a83d1e2344
+61	123	7222128536872892	TimeControlSystemForEmployees.exe	950cd0ddd9a91e89
