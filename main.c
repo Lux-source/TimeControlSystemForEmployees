@@ -24,7 +24,7 @@ typedef struct {
 typedef struct {
     char name[20];
     char lastName[20];
-    char DNI[9];
+    char DNI[10]; // last char is '\0'
     int monthlyHours;
     int yearlyHours;
     float hourlyRate;
@@ -35,7 +35,7 @@ typedef struct {
 
 
 
-void registerEmployee(Employee company[], int size, int currentEmployees);
+void registerEmployee(Employee company[], int size, int *currentEmployees);
 
 int main() {
 
@@ -44,9 +44,9 @@ int main() {
     int option = -1;
     Get_time(&hour, &min);
 
-    Employee company[20];
+    Employee company[20] = {0};
+    int currentEmployees = 0;
 
-    //printf("Time is: %d:%d", hour, min);
 
     do {
 
@@ -64,7 +64,7 @@ int main() {
         switch (option) {
             case 1:
                 printf("\n");
-                registerEmployee(company,20,5);
+                registerEmployee(company,20,&currentEmployees);
                 printf("\n");
                 break;
             case 2:
@@ -96,12 +96,25 @@ int main() {
 
 // Option 1, Register New Employee
 
-void registerEmployee(Employee company[], int size, int currentEmployees){
+void registerEmployee(Employee company[], int size, int *currentEmployees){
+
+    if (*currentEmployees == 20){
+        printf("No more employees are allowed in the company.\n");
+        return;
+    }
 
     printf("\nEnter name: ");
-    scanf("%s", company->name);
+    scanf("%19s", company[(*currentEmployees)].name);
 
+    printf("\nEnter last name: ");
+    scanf("%19s", company[(*currentEmployees)].lastName);
 
+    printf("\nEnter DNI: ");
+    scanf("%10s", company[(*currentEmployees)].DNI);
+
+    // Rest of data is initialized at 0 by default.
+
+    (*currentEmployees)++;
 }
 
 // Option 2, Record Entry Time
