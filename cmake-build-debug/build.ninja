@@ -56,6 +56,13 @@ build CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj: C_COMPILER__TimeC
   OBJECT_DIR = CMakeFiles\TimeControlSystemForEmployees.dir
   OBJECT_FILE_DIR = CMakeFiles\TimeControlSystemForEmployees.dir
 
+build CMakeFiles/TimeControlSystemForEmployees.dir/library.c.obj: C_COMPILER__TimeControlSystemForEmployees_unscanned_Debug C$:/Users/andre/CLionProjects/TimeControlSystemForEmployees/library.c || cmake_object_order_depends_target_TimeControlSystemForEmployees
+  DEP_FILE = CMakeFiles\TimeControlSystemForEmployees.dir\library.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/andre/CLionProjects/TimeControlSystemForEmployees/.
+  OBJECT_DIR = CMakeFiles\TimeControlSystemForEmployees.dir
+  OBJECT_FILE_DIR = CMakeFiles\TimeControlSystemForEmployees.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target TimeControlSystemForEmployees
@@ -64,7 +71,7 @@ build CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj: C_COMPILER__TimeC
 #############################################
 # Link the executable TimeControlSystemForEmployees.exe
 
-build TimeControlSystemForEmployees.exe: C_EXECUTABLE_LINKER__TimeControlSystemForEmployees_Debug CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj
+build TimeControlSystemForEmployees.exe: C_EXECUTABLE_LINKER__TimeControlSystemForEmployees_Debug CMakeFiles/TimeControlSystemForEmployees.dir/main.c.obj CMakeFiles/TimeControlSystemForEmployees.dir/library.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\TimeControlSystemForEmployees.dir

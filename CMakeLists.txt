@@ -7,4 +7,5 @@ include_directories(.)
 
 add_executable(TimeControlSystemForEmployees
         main.c
-        library.h)
+        library.h
+        library.c)

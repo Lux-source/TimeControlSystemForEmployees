@@ -8,13 +8,11 @@
 #include "library.h"
 #include<time.h>
 #include <stdio.h>
+#include <string.h>
 
 // Structs
 
-typedef struct {
-    int numbers[8];
-    char character;
-} DNI;
+
 
 typedef struct {
     int hourEntry;
@@ -26,17 +24,16 @@ typedef struct {
 typedef struct {
     char name[20];
     char lastName[20];
-    int employeeId;
+    char DNI[9];
     int monthlyHours;
     int yearlyHours;
     float hourlyRate;
-    DNI dni;
     DailyHours workedTime[31];
 } Employee;
 
 // Headers
 
-void Get_time(int *hour, int *min);
+
 
 void registerEmployee(Employee company[], int size, int currentEmployees);
 
@@ -96,16 +93,6 @@ int main() {
 
 
 
-// Given function by Arturo, that provides time
-
-void Get_time(int *hour, int *min) {
-    struct tm *h;
-    time_t hor;
-    hor = time(NULL);
-    h = localtime(&hor);
-    *hour = h->tm_hour;
-    *min = h->tm_min;
-}
 
 // Option 1, Register New Employee
 
