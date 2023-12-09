@@ -17,6 +17,7 @@ typedef struct {
     char lastName[20];
     char DNI[10]; // last char is '\0'
     int monthlyHours;
+    int remainMins; // minutos que sobran para sumar al final para las horas totales
     int yearlyHours;
     float hourlyRate;
     float monthlySalary;
@@ -25,17 +26,19 @@ typedef struct {
 
 // Headers
 
-void registerEmployee(Employee company[], int size, int *currentEmployees);
+void registerEmployee(Employee *company,int *currentEmployees);
 
-void recordEntryEmployee(Employee company[], int size, int *currentEmployees, int *hourEntry, int *minEntry);
+void recordEntryEmployee(Employee *company, int *currentEmployees, int *hourEntry, int *minEntry);
 
-void recordExitEmployee(Employee company[], int size, int *currentEmployees, int *hourExit, int*minExit, int *hourEntry, int *minEntry, int (*hoursMonthEmployees)[31]);
+void
+recordExitEmployee(Employee *company, int *currentEmployees, int *hourExit, int *minExit, int *hourEntry,
+                   int *minEntry, int (*hoursMonthEmployees)[31]);
 
-int FindEmployeeIndex(Employee company[], int size,char* DNI, int *currentEmployees);
+int FindEmployeeIndex(Employee *company, char *DNI, int *currentEmployees);
 
-void calculateMonthlySalary(Employee company[], int size, int *(currentEmployees));
+void calculateMonthlySalary(Employee *company, int *(currentEmployees));
 
-void removeEmployee(Employee company[], int size, int *currentEmployees);
+void removeEmployee(Employee *company,int *currentEmployees);
 
 void printMatriz(int (*hoursMonthEmployees)[31]);
 
@@ -74,28 +77,29 @@ int main() {
         switch (option) {
             case 1:
                 printf("\n");
-                registerEmployee(company, 20, &currentEmployees);
+                registerEmployee(company, &currentEmployees);
                 printf("\n");
                 break;
             case 2:
                 printf("\n");
-                recordEntryEmployee(company, 20, &currentEmployees, &entryHour, &entryMin);
+                recordEntryEmployee(company, &currentEmployees, &entryHour, &entryMin);
                 printf("\n");
                 break;
             case 3:
                 printf("\n");
-                recordExitEmployee(company,20,&currentEmployees, &exitHour, &exitMin, &entryHour, &entryMin, hoursMonthEmployees);
+                recordExitEmployee(company, &currentEmployees, &exitHour, &exitMin, &entryHour, &entryMin,
+                                   hoursMonthEmployees);
                 printf("\n");
-                printMatriz(hoursMonthEmployees);
+                //printMatriz(hoursMonthEmployees);
                 break;
             case 4:
                 printf("\n");
-                calculateMonthlySalary(company,20,&currentEmployees);
+                calculateMonthlySalary(company, &currentEmployees);
                 printf("\n");
                 break;
             case 5:
                 printf("\n");
-                removeEmployee(company, 20, &currentEmployees);
+                removeEmployee(company, &currentEmployees);
                 printf("\n");
                 break;
             case 6:
@@ -115,7 +119,7 @@ int main() {
 
 // Option 1, Register New Employee
 
-void registerEmployee(Employee company[], int size, int *currentEmployees) {
+void registerEmployee(Employee *company, int *currentEmployees) {
 
     if (*currentEmployees == 20) {
         printf("No more employees are allowed in the company.\n");
@@ -138,7 +142,7 @@ void registerEmployee(Employee company[], int size, int *currentEmployees) {
 
 // Option 2, Record Entry Time
 
-void recordEntryEmployee(Employee company[], int size, int *currentEmployees, int *hourEntry, int*minEntry) {
+void recordEntryEmployee(Employee *company, int *currentEmployees, int *hourEntry, int *minEntry) {
     char DNI[10];
     int day;
 
@@ -163,7 +167,7 @@ void recordEntryEmployee(Employee company[], int size, int *currentEmployees, in
             *(hourEntry) = hour;
             *(minEntry) = min;
 
-            printf("[+] Entry time recorded for %s - day %d %d:%dh\n", DNI, day,  *(hourEntry), *(minEntry));
+            printf("[+] Entry time recorded for %s - day %02d, %02d:%02dh\n", DNI, day, *(hourEntry), *(minEntry));
             return;
         }
     }
@@ -174,7 +178,9 @@ void recordEntryEmployee(Employee company[], int size, int *currentEmployees, in
 
 // Option 3, Record Exit Time
 
-void recordExitEmployee(Employee company[], int size, int *currentEmployees, int *hourExit, int*minExit, int *hourEntry, int *minEntry, int (*hoursMonthEmployees)[31]) {
+void
+recordExitEmployee(Employee *company, int *currentEmployees, int *hourExit, int *minExit, int *hourEntry,
+                   int *minEntry, int (*hoursMonthEmployees)[31]) {
     char DNI[10];
     int day, hour, min;
     int hoursWorked;
@@ -197,15 +203,18 @@ void recordExitEmployee(Employee company[], int size, int *currentEmployees, int
             int choice;
             scanf("%d", &choice);
             if (choice == 1) {
-                printf("Enter exit hour (HH MM): ");
-                scanf("%d %d", &hour, &min);
-
-                if ((hour < *(hourEntry)) ||
-                    (hour == *(hourEntry) &&
-                     min == *(minEntry)) || (hour > 19 || (hour == 19 && min > 0))) {
-                    printf("Invalid exit time.\n");
-                    return;
-                }
+                do {
+                    printf("Enter exit hour (HH MM): ");
+                    scanf("%d %d", &hour, &min);
+                    if ((hour < 0 || hour > 23 || min < 0 || min > 59) || // Hora invalida
+                        (hour < *(hourEntry) || (hour == *(hourEntry) && min < *(minEntry))) ||
+                        // Hora de salida es anterior a la de entrada
+                        (hour > 19 || (hour == 19 && min > 0))) { // Hora supera las 19:00
+                        printf("Invalid exit time.\n");
+                    }
+                } while ((hour < 0 || hour > 23 || min < 0 || min > 59) ||
+                         (hour < *(hourEntry) || (hour == *(hourEntry) && min < *(minEntry))) ||
+                         (hour > 19 || (hour == 19 && min > 0)));
             } else {
                 Get_time(&hour, &min);
             }
@@ -219,12 +228,11 @@ void recordExitEmployee(Employee company[], int size, int *currentEmployees, int
                 minsWorked += 60;
             }
 
-            printf("Hours worked on day %d: %d hours and %d minutes\n", day ,hoursWorked, minsWorked);
+            printf("Hours worked on day %d: %d hours and %d minutes\n", day, hoursWorked, minsWorked);
 
             company[i].monthlyHours += hoursWorked;
-            (*hoursMonthEmployees)[day-1] = hoursWorked;
-            //hoursMonthEmployee[i][day-1] = hoursWorked;
-
+            (*hoursMonthEmployees)[day - 1] = hoursWorked;
+            company[i].remainMins += minsWorked; // para tener en cuenta los minutos que sobran
             return;
         }
 
@@ -236,36 +244,46 @@ void recordExitEmployee(Employee company[], int size, int *currentEmployees, int
 
 // Option 4, Calculate Monthly Salary
 
-void calculateMonthlySalary(Employee company[], int size, int *(currentEmployees)) {
+void calculateMonthlySalary(Employee *company, int *(currentEmployees)) {
+
+    int extraHours = 0;
 
     for (int i = 0; i < *(currentEmployees); i++) {
 
-        if (company[i].monthlyHours > 145){
+
+        // En caso de que tengamos unos minutos extra que puedan pasarse a horas
+        if (company[i].remainMins > 59){
+            extraHours = company[i].remainMins / 60;
+            company[i].remainMins = company[i].remainMins % 60;
+            company[i].monthlyHours += extraHours;
+        }
+        // Comprobamos cuanto vamos a pagarle según las horas trabajadas
+        if (company[i].monthlyHours > 145) {
             company[i].hourlyRate = 15;
-        }else if(company[i].monthlyHours <= 145 && company[i].monthlyHours >= 136){
+        } else if (company[i].monthlyHours <= 145 && company[i].monthlyHours >= 136) {
             company[i].hourlyRate = 14;
-        }else if(company[i].monthlyHours <= 135 && company[i].monthlyHours >= 120){
+        } else if (company[i].monthlyHours <= 135 && company[i].monthlyHours >= 120) {
             company[i].hourlyRate = 12.45;
         } else {
             company[i].hourlyRate = 8;
         }
 
-        float monthlySalary = company[i].monthlyHours * company[i].hourlyRate;
+        company[i].monthlySalary = (float)company[i].monthlyHours * company[i].hourlyRate;
 
-        company[i].monthlySalary = monthlySalary;
-        printf("Employee DNI: %s, Name: %s, Monthly Salary: %.2f\n", company[i].DNI, company[i].name, monthlySalary);
+        //company[i].monthlySalary = monthlySalary;
+        printf("Employee DNI: %s, Name: %s, Monthly Salary: %.2f\n", company[i].DNI, company[i].name, company[i].monthlySalary);
     }
 
 }
 
 // Option 5, Remove An Employee
 
-void removeEmployee(Employee company[], int size, int *currentEmployees) {
+void removeEmployee(Employee *company, int *currentEmployees) {
     char DNI[10];
     printf("\nEnter employee's DNI to remove: ");
     scanf("%10s", DNI);
 
-    int index = FindEmployeeIndex(company, size, DNI, currentEmployees);
+    int index = FindEmployeeIndex(company, DNI, currentEmployees);
 
     if (index != -1) {
         for (int i = index; i < *currentEmployees - 1; i++) {
@@ -280,7 +298,7 @@ void removeEmployee(Employee company[], int size, int *currentEmployees) {
 
 
 // Aux Function Search Employee
-int FindEmployeeIndex(Employee company[], int size,char* DNI, int *(currentEmployees)) {
+int FindEmployeeIndex(Employee *company, char *DNI, int *(currentEmployees)) {
     for (int i = 0; i < *(currentEmployees); i++) {
         if (strcmp(company[i].DNI, DNI) == 0) {
             return i;
@@ -298,16 +316,16 @@ void printMatriz(int (*hoursMonthEmployees)[31]) {
     }
 }
 
-void printArray(Employee company, int size, int *(currentEmployees)){
+void printArray(Employee *company, int *(currentEmployees)) {
 
     for (int i = 0; i < *(currentEmployees); i++) {
-        printf("\nEmployee %d\n",i);
-        printf("\nName: %s\n", company.name);
-        printf("\nName: %s\n", company.lastName);
-        printf("\nName: %s\n", company.DNI);
-        printf("\nName: %f\n", company.hourlyRate);
-        printf("\nName: %d\n", company.workedTime);
-        printf("\nName: %f\n", company.monthlySalary);
+        printf("\nEmployee %d\n", i);
+        printf("\nName: %s\n", company->name);
+        printf("\nName: %s\n", company->lastName);
+        printf("\nName: %s\n", company->DNI);
+        printf("\nName: %f\n", company->hourlyRate);
+        printf("\nName: %d\n", company->workedTime);
+        printf("\nName: %f\n", company->monthlySalary);
         printf("\n---------------------\n");
     }
 
